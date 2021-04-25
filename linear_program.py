@@ -49,7 +49,8 @@ def inf_conc_mod(seed_set: Sequence[Hashable], abs_mod: AbstractModel,
     inst.flow_profit = Constraint(inst.E,
                                   rule=(lambda model, i, j:
                                         (model.pi[i] - model.pi[j] <=
-                                         input_graph.es[input_graph.get_eid(i, j)]["q"])
+                                         input_graph.es[
+                                            input_graph.get_eid(i, j)]["q"])
                                         )
                                   )
 

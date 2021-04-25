@@ -1,6 +1,6 @@
 """Algorithms based on Pruned Monte Carlo method by Ohsaka et. al. 2014."""
 # Python Standard library
-from os import listdir, remove
+from os import remove
 from pathlib import Path
 from shutil import which
 from subprocess import check_output

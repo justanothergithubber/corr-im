@@ -1,14 +1,14 @@
-# Correlational Robust Influence Maximisation
+# Correlational Robust Influence Maximization
 ## Overview
-This repository contains code relating to the paper titled "Correlation Robust Influence Maximization". The code is provided primarily for reproducibility, and certain code are left as-is to reproduce results from when the code was written. Ideas from this code may be used to create a library.
+This repository contains code relating to the paper titled ["Correlation Robust Influence Maximization"](https://proceedings.neurips.cc/paper/2020/hash/4ee78d4122ef8503fe01cdad3e9ea4ee-Abstract.html). The code is provided primarily for reproducibility, and certain code are left as-is to reproduce results from when the code was written. Ideas from this code may be used to create a library.
 
 ## Data
 ### Datasets used
 We use two real datasets:
-* [`polblogs`](http://www-personal.umich.edu/~mejn/netdata/)
+* [`polblogs`](http://www-personal.umich.edu/~mejn/netdata/) - Update 25th April 2021, it seems that Mark Newman's page is no longer accessible, but there are multiple mirrors of the `polblogs` dataset and all can be used.
 * [`wikivote`](https://snap.stanford.edu/data/wiki-Vote.html)
 
-Please place the downloaded files `polblogs.txt` and `Wiki-Vote.txt` in a folder called `data` after download.
+Please place the downloaded files `polblogs.gml` and `Wiki-Vote.txt` in a folder called `data` after download. Note that we modify all input graphs to simple graphs with [`Graph.simplify()`](https://igraph.org/python/doc/api/igraph._igraph.GraphBase.html#simplify). In this case, `polblogs` is changed from a multidigraph with self-loops to a simple graph.
 
 ### Use your own dataset
 To use your own dataset, please modify the files [`graph_functions.py`](graph_functions.py) and [`config.py`](config.py). `graph_functions.py` is used in both loading graphs and assigning edge weights. `config.py` influences the graphs loaded in `experiment.py`.
@@ -72,12 +72,17 @@ We note that users who only wish to use the algorithm may modify the code and si
 Note that within `accelgreedy(...)`, there is a part which [builds a distance matrix](https://igraph.org/python/doc/igraph.GraphBase-class.html#shortest_paths) based on the graph, which speeds up the expected influence calculation. This has memory requirements scaling quadratically with the number of nodes of the graph, and so is not expected to scale well above millions. While the script can be changed to not require this, it will slow down the calculations.
 
 # Citation
-If you find our work useful, please cite our paper. The preliminary .bib entry is given below, which we will update as soon as the final version is published:
+We copy, in full, the Bibtex entry as provided by NeurIPS 2020:
 ```
-@incollection{NIPS2020_4113,
-title = {Correlation Robust Influence Maximization},
-author = {Chen, Louis and Padmanabhan, Divya and Lim, Chee Chin and Natarajan, Karthik},
-booktitle = {Advances in Neural Information Processing Systems 33},
-year = {2020}
+@inproceedings{NEURIPS2020_4ee78d41,
+ author = {Chen, Louis and Padmanabhan, Divya and Lim, Chee Chin and Natarajan, Karthik},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {H. Larochelle and M. Ranzato and R. Hadsell and M. F. Balcan and H. Lin},
+ pages = {7078--7089},
+ publisher = {Curran Associates, Inc.},
+ title = {Correlation Robust Influence Maximization},
+ url = {https://proceedings.neurips.cc/paper/2020/file/4ee78d4122ef8503fe01cdad3e9ea4ee-Paper.pdf},
+ volume = {33},
+ year = {2020}
 }
 ```

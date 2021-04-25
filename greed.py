@@ -17,6 +17,18 @@ from config import GRT, SolveMethod
 from linear_program import inf_abs_mod, inf_conc_mod
 
 
+def _verbose_output(verbosity_setting: int, input_k: int,
+                    current_solution: List[int], to_be_added: int,
+                    current_spread: float) -> None:
+    if verbosity_setting > 0:
+        if not (input_k+1) % 5:
+            print(f"When k={input_k}, solution = ", end="")
+            pprint(current_solution, compact=True)
+    if verbosity_setting > 1:
+        print(f"When k={input_k}, seed to be added is {to_be_added}, "
+              f"with value {current_spread}")
+
+
 def accelgreedy(input_graph: Graph, desired_size: int,
                 method: SolveMethod, verbosity: int = 0) -> GRT:
     """
@@ -99,14 +111,9 @@ def accelgreedy(input_graph: Graph, desired_size: int,
         marg_gain = sorted_list[0][1]
         cur_spread += marg_gain
         marg_gain_return.append(marg_gain)
-        if verbosity > 0:
-            if not (k+1) % 5:
-                print(f"When k={k}, solution = ", end="")
-                pprint(greedy_solution, compact=True)
-        if verbosity > 1:
-            greedy_step_str = (f"When k={k}, "
-                               f"seed to be added is {greedy_to_add}, "
-                               f"with value {cur_spread}")
-            print(greedy_step_str)
         sorted_list.pop(0)
+
+        # Verbose output
+        _verbose_output(verbosity, k, greedy_solution,
+                        greedy_to_add, cur_spread)
     return (greedy_solution, marg_gain_return, compute_times)

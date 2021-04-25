@@ -17,17 +17,13 @@ from pmc import pmc_greed, pmc_inf_est
 
 # pylint: disable=E1101
 
-METHOR_STR_PRINT_DICT = {
-    sol_method: sol_str for sol_method, sol_str in zip(
-        SolveMethod,
-        (("Running accelerated correlatonally robust greedy algorithm on "
-          "graph via graph-techniques (Corr-Greedy)"),
-         "Running C++ pruned Monte Carlo simulations on graph (IC-Greedy)",
-         ("Running accelerated correlationally robust greedy algorithm on "
-          "graph via LP (Corr-Greedy)")
-         )
-    )
-}
+METHOR_STR_PRINT_DICT = dict(zip(
+    SolveMethod,
+    ("Running accelerated correlationally robust greedy algorithm on graph "
+     "via graph-techniques (Corr-Greedy)",
+     "Running C++ pruned Monte Carlo simulations on graph (IC-Greedy)",
+     "Running accelerated correlationally robust greedy algorithm on graph "
+     "via LP (Corr-Greedy)")))
 
 
 class Interval():
@@ -117,12 +113,11 @@ class Experiment():
             corr_marg_inf = accumulate(greed_res[1])
             pmc_marg_inf = list(pmc_inf_est(
                 tsv_path,
-                [node for node in greed_res[0]],
-                estimation_seed=self.estimation_seed
-                )
-                                )
+                seed_list,
+                estimation_seed=self.estimation_seed))
             ic_marg_inf = accumulate(pmc_marg_inf)
             timing_info = [x - self.start_time for x in greed_res[2]]
+
         # Independence Cascade
         elif self.solution_method == SolveMethod.independence_cascade:
             pmc_greed_res = pmc_greed(tsv_path, self.target_seed_set_size)

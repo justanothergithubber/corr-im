@@ -267,7 +267,7 @@ def plot_expected_influence_graphs() -> None:
     """
     Plot expected influence against marginal probabilities.
 
-    Requires summary.csv
+    Requires summary.csv.
 
     Plot expected influence against marginal probabilities for wikivote and
     polblogs for both objectives for seed sets obtained in both approximation
@@ -288,7 +288,7 @@ def plot_expected_influence_graphs() -> None:
                 all_data[graph_config] = [obj_data]
 
     # plot
-    for graph_type, figlabel in zip(GRAPHS_USED, "ab"):
+    for graph_type, figlabel in zip(GRAPHS_USED, "ba"):
         figure()
         for sol_method in SOLUTION_METHODS_USED:
             sol_str = SOL_NAMES[sol_method]
@@ -325,7 +325,7 @@ def draw_viz(input_graph_dict: GraphDict) -> None:
     """
     Create graph visualization.
 
-    Requires some specific data files
+    Requires some specific data files.
     """
     data = OUTPUT_FOLDER.glob("polblogs,weighted_cascade,*,0.csv")
     seeds: Dict[str, Set[int]] = {x: set() for x in SOL_TUPLE}
@@ -399,11 +399,12 @@ def get_table1_data(input_graph_dict: GraphDict) -> None:
     print("Finished writing Table 1 data")
 
 
-def get_table2_data() -> None:
-    """Summarises some data regarding the heterogeneous edge weight graphs."""
-    # read data
-    data_dict: Dict[Tuple[str, ...], List[Tuple[float, ...]]] = {}
-    table_data = {}
+def _read_in_table2_data() -> Tuple[Dict[Tuple[str, ...],
+                                         List[Tuple[float, ...]]],
+                                    Dict[Tuple[str, ...],
+                                         Tuple[float, ...]]]:
+    out_data_dict: Dict[Tuple[str, ...], List[Tuple[float, ...]]] = {}
+    out_table_data = {}
     with open(PAPER_DATA_FOLDER / SUMMARY_CSV) as summary_file:
         summary_reader = reader(summary_file)
         for line in summary_reader:
@@ -414,11 +415,18 @@ def get_table2_data() -> None:
             graph_config = tuple(line[0:3])
             obj_data = tuple(float(x) for x in line[4:6])
             seed_set_graph_data = tuple(float(x) for x in line[7:11])
-            if graph_config in data_dict:
-                data_dict[graph_config].append(obj_data)
+            if graph_config in out_data_dict:
+                out_data_dict[graph_config].append(obj_data)
             else:
-                table_data[graph_config] = seed_set_graph_data
-                data_dict[graph_config] = [obj_data]
+                out_table_data[graph_config] = seed_set_graph_data
+                out_data_dict[graph_config] = [obj_data]
+    return out_data_dict, out_table_data
+
+
+def get_table2_data() -> None:
+    """Summarises some data regarding the heterogeneous edge weight graphs."""
+    # read data
+    data_dict, table_data = _read_in_table2_data()
 
     # Start writing
     with open(PAPER_DATA_FOLDER / "table2.csv", "w", newline="") as table2csv:
@@ -547,14 +555,18 @@ def make_table2_tex() -> None:
 
         # Captions and closing environment
         cur_indent = 2
-        table2_tex.write(" " * cur_indent)
-        table2_tex.write("\\end{tabularx}\n")
-        table2_tex.write("\\caption{Properties of $\\mathcal{S}_{ic}^g$ and ")
-        table2_tex.write("$\\mathcal{S}_{corr}^g$ for non-identical edge ")
-        table2_tex.write("probabilities. $k=40$.}\n")
-        table2_tex.write("\\label{tab:summary}\n")
-        table2_tex.write("\\vspace{-5mm}\n")
-        table2_tex.write("\\end{table}")
+        closing_environment_items = (
+            " " * cur_indent,
+            "\\end{tabularx}\n",
+            "\\caption{Properties of $\\mathcal{S}_{ic}^g$ and ",
+            "$\\mathcal{S}_{corr}^g$ for non-identical edge ",
+            "probabilities. $k=40$.}\n",
+            "\\label{tab:summary}\n",
+            "\\vspace{-5mm}\n",
+            "\\end{table}"
+        )
+        for closing_item in closing_environment_items:
+            table2_tex.write(closing_item)
     print("Finished writing .tex for table 2")
 
 
@@ -581,15 +593,15 @@ def print_other_stats() -> None:
 
 
 if __name__ == "__main__":
-    # PAPER_DATA_FOLDER.mkdir(exist_ok=True)
-    # get_data()
+    PAPER_DATA_FOLDER.mkdir(exist_ok=True)
+    get_data()
     graph_dict = get_all_graphs()
-    # make_summary_csv(graph_dict)
-    # plot_compute_times()
-    # plot_hists(graph_dict)
-    # plot_expected_influence_graphs()
+    make_summary_csv(graph_dict)
+    plot_compute_times()
+    plot_hists(graph_dict)
+    plot_expected_influence_graphs()
     draw_viz(graph_dict)
-    # get_table1_data(graph_dict)
-    # get_table2_data()
-    # make_table2_tex()
-    # print_other_stats()
+    get_table1_data(graph_dict)
+    get_table2_data()
+    make_table2_tex()
+    print_other_stats()
