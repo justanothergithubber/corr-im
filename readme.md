@@ -4,7 +4,7 @@
 
 This repository contains code relating to the paper titled ["Correlation Robust
 Influence Maximization"][neurips_paper], and its
-[expanded version published in Management Science](mnsc_paper). The code is
+[expanded version published in Management Science][mnsc_paper]. The code is
 provided primarily for reproducibility, and certain code are left as-is to
 reproduce results from when the code was written. Ideas from this code may be
 used to create a library.
