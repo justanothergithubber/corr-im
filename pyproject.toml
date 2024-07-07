@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "corr-im"
+version = "2.0.0"
+description = "Correlation Robust Influence Maximization"
+authors = ["justanothergithubber <3600019+justanothergithubber@users.noreply.github.com>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+repository = "https://github.com/justanothergithubber/corr-im"
+keywords = ["influence maximization"]
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+igraph = "^0.10.8"
+numpy = "^1.26.0"
+matplotlib = "^3.8.0"
+pyomo = "^6.6.2"
+networkx = "^3.1"
+pandas = "^2.1.1"
+more-itertools = "^10.1.0"
+scipy = "^1.13.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.2.6"
+groundwork-sphinx-theme = "^1.1.1"
